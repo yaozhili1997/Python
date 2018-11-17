@@ -1,0 +1,42 @@
+from tkinter import *#引入tkinter，类比于java中的gui的swing
+reset=True #原有的索引列重置索引，不再另外添加新列
+def buttonCallBack(event):
+    global label#global语句可以起到声明变量作用域，全局函数
+    global reset
+    num=event.widget['text']#widget（部件）+event（事件的响应）
+    if num=='C':
+        label['text']="0"
+        return#后面没有参数，返回None
+    if num in "=":
+        label['text']=str(eval(label['text']))#eval() 函数用来执行一个字符串表达式，并返回表达式的值。
+        reset=True
+        return 
+    s=label['text']
+    if s=='0' or reset==True:
+        s=""
+        reset=False
+    label['text']=s+num
+#主窗口
+root=Tk()#创建界面
+root.wm_title("弱智计算器")
+#显示栏1
+label=Label(root,text="0",background="white",anchor="w")#数值的显示框 anchor 抛锚的锚对齐方式，左对齐”w”，右对齐”e”，顶对齐”n”，底对齐”s”
+label['width']=35
+label['height']=2
+label.grid(row=1,columnspan=4,sticky="s")#grid管理器是Tkinter里面最灵活的几何管理布局器 columnspan元素横跨的列数
+#默认的空间会在网格中居中显示。你可以使用sticky选项去指定对齐方式，可以选择的值有：N/S/E/W，分别代表上/下/左/右。如果你想让label靠左显示，你可以设置stricky的值为W。
+showText="789/456*123-0.C+"
+for i in range(4):
+    for j in range(4):
+        b=Button(root,text=showText[i*4+j],width=7)
+        b.grid(row=i+2,column=j)#cloumn插件放置的列数列
+        b.bind("<Button-1>",buttonCallBack)#<Button-1>是鼠标左键单击，buttonCallBack反调函数值
+showText="()"
+for i in range(2):
+    b=Button(root,text=showText[i],width=7)
+    b.grid(row=6,column=2+i)
+    b.bind("<Button-1>",buttonCallBack)
+b=Button(root,text="=")
+b.grid(row=6,columnspan=2,sticky="we")
+b.bind("<Button-1>",buttonCallBack)
+root.mainloop()#主事件循环
